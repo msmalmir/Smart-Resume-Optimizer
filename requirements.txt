@@ -4,3 +4,5 @@ black
 fastapi
 uvicorn
 python-multipart
+pdfplumber
+openai

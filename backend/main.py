@@ -1,33 +1,49 @@
 # backend/main.py
 
-from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.middleware.cors import CORSMiddleware
+import time
+import io
+from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.responses import JSONResponse
+from backend.parser import extract_text_from_pdf
+from backend.llm_interface import get_tailored_resume
 
 app = FastAPI()
-
-# Optional: allow frontend to connect if you're using Streamlit or React
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, specify allowed domains
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
+session_cache = {}
 @app.get("/")
-def read_root():
-    return {"message": "Smart Resume Optimizer API is running."}
+def home():
+    return {"message": "Resume Optimizer is live!"}
 
 @app.post("/optimize")
 async def optimize_resume(
     resume: UploadFile = File(...),
-    job_description: str = Form(...)
+    job_description: str = Form(...),
+    api_key: str = Form(...),
+    cache_key: str = Form(None),
+    use_cache: bool = Form(False)
 ):
-    # Placeholder logic
-    resume_text = await resume.read()
-    return JSONResponse(content={
-        "received_file_name": resume.filename,
-        "job_description_snippet": job_description[:100],
-        "status": "Success. Ready for processing!"
-    })
+    # Read file & extract resume text
+    resume_bytes = await resume.read()
+    resume_text = extract_text_from_pdf(io.BytesIO(resume_bytes))
+
+    # Cache API key if user opted in
+    if use_cache and cache_key:
+        session_cache[cache_key] = {
+            "key": api_key,
+            "expires": time.time() + 1800
+        }
+
+    # Retrieve from cache if exists
+    key_to_use = api_key
+    if use_cache and cache_key in session_cache:
+        if session_cache[cache_key]["expires"] > time.time():
+            key_to_use = session_cache[cache_key]["key"]
+        else:
+            del session_cache[cache_key]  # expired
+
+    tailored = get_tailored_resume(
+        resume_text=resume_text,
+        job_description=job_description,
+        api_key=key_to_use
+    )
+
+    return JSONResponse(content={"tailored_resume": tailored})
