@@ -4,6 +4,8 @@ import io
 import time
 from backend.parser import extract_text_from_pdf
 from backend.llm_interface import get_tailored_resume
+from fastapi.responses import StreamingResponse
+from backend.pdf_exporter import markdown_to_pdf
 
 app = FastAPI()
 session_cache = {}
@@ -46,4 +48,15 @@ async def optimize_resume(
         prompt=custom_prompt
     )
 
+
+
     return {"tailored_resume": tailored}
+
+@app.post("/export-pdf")
+async def export_pdf(content: str = Form(...)):
+    pdf_bytes = markdown_to_pdf(content)
+    return StreamingResponse(
+        io.BytesIO(pdf_bytes),
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=optimized_resume.pdf"}
+    )
