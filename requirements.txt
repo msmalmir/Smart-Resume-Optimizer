@@ -1,3 +1,6 @@
 pylint
 pytest
 black
+fastapi
+uvicorn
+python-multipart
