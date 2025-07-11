@@ -6,3 +6,4 @@ uvicorn
 python-multipart
 pdfplumber
 openai
+markdown2 weasyprint
