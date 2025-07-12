@@ -11,8 +11,15 @@ def render_pandoc_resume(markdown_text: str) -> bytes:
         with open(md_path, "w", encoding="utf-8") as f:
             f.write(markdown_text)
 
-        # Generate PDF using pandoc
-        subprocess.run(["pandoc", md_path, "-o", pdf_path], check=True)
+        # Generate PDF with custom formatting
+        subprocess.run([
+            "pandoc", md_path,
+            "-o", pdf_path,
+            "--pdf-engine=xelatex",                     # Use xelatex for better font handling
+            "--variable", "mainfont=Arial",             # Use Arial (very similar to your image)
+            "--variable", "fontsize=10pt",              # Slightly smaller font
+            "-V", "geometry:margin=0.6in"               # Tighten margins to fit one page
+        ], check=True)
 
         # Read PDF bytes
         with open(pdf_path, "rb") as f:
