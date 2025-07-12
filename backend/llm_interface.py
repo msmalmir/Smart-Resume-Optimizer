@@ -2,7 +2,10 @@
 
 from openai import OpenAI
 
-def get_tailored_resume(resume_text: str, job_description: str, api_key: str, prompt: str = "") -> str:
+
+def get_tailored_resume(
+    resume_text: str, job_description: str, api_key: str, prompt: str = ""
+) -> str:
     client = OpenAI(api_key=api_key)
 
     # You no longer need a fixed system prompt unless you want defaults
@@ -19,14 +22,9 @@ def get_tailored_resume(resume_text: str, job_description: str, api_key: str, pr
 
     response = client.chat.completions.create(
         model="gpt-4-turbo",
-        messages=[
-            {"role": "user", "content": user_prompt}
-        ],
+        messages=[{"role": "user", "content": user_prompt}],
         temperature=0.4,
-        max_tokens=1500
+        max_tokens=1500,
     )
 
     return response.choices[0].message.content
-
-
-
