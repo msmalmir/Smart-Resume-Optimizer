@@ -15,10 +15,10 @@ def render_pandoc_resume(markdown_text: str) -> bytes:
         subprocess.run([
             "pandoc", md_path,
             "-o", pdf_path,
-            "--pdf-engine=xelatex",                     # Use xelatex for better font handling
-            "--variable", "mainfont=Arial",             # Use Arial (very similar to your image)
-            "--variable", "fontsize=10pt",              # Slightly smaller font
-            "-V", "geometry:margin=0.6in"               # Tighten margins to fit one page
+            "--pdf-engine=xelatex",                     
+            "--variable", "mainfont=Latin Modern Sans",            
+            "--variable", "fontsize=10pt",              
+            "-V", "geometry:margin=0.6in"               
         ], check=True)
 
         # Read PDF bytes
