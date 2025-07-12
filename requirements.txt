@@ -7,6 +7,4 @@ python-multipart
 pdfplumber
 openai
 markdown 
-weasyprint
-subprocess
-tempfile
+# weasyprint==60.1
