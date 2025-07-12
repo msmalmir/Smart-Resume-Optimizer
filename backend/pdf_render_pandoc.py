@@ -3,6 +3,7 @@ import tempfile
 import os
 
 def render_pandoc_resume(markdown_text: str) -> bytes:
+
     with tempfile.TemporaryDirectory() as tmpdir:
         md_path = os.path.join(tmpdir, "resume.md")
         pdf_path = os.path.join(tmpdir, "resume.pdf")
