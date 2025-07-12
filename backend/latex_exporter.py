@@ -21,8 +21,11 @@ def render_latex_resume(content: str) -> bytes:
         with open(tex_path, "w") as f:
             f.write(filled)
 
-        subprocess.run(["pdflatex", "-interaction=nonstopmode", tex_path],
+        result = subprocess.run(["pdflatex", "-interaction=nonstopmode", tex_path],
                        cwd=tmpdir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
+        print(result.stdout.decode())
+        print(result.stderr.decode())
 
         pdf_path = os.path.join(tmpdir, "resume.pdf")
         if not os.path.exists(pdf_path):
