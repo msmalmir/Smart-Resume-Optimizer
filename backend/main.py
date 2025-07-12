@@ -46,7 +46,7 @@ async def optimize_and_export_resume(
         prompt=custom_prompt,
     )
 
-    # 🧾 Generate PDF from Markdown
+    # Generate PDF from Markdown
     pdf_bytes = render_pandoc_resume(tailored)
     
     return StreamingResponse(

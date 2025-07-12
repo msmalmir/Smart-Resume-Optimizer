@@ -7,18 +7,20 @@ def render_pandoc_resume(markdown_text: str) -> bytes:
     with tempfile.TemporaryDirectory() as tmpdir:
         md_path = os.path.join(tmpdir, "resume.md")
         pdf_path = os.path.join(tmpdir, "resume.pdf")
+        template_path = "/workspaces/Smart-Resume-Optimizer/backend/custom_resume_template.tex"
 
         # Save markdown content
         with open(md_path, "w", encoding="utf-8") as f:
             f.write(markdown_text)
+            
 
         # Generate PDF with custom formatting
         subprocess.run([
             "pandoc", md_path,
             "-o", pdf_path,
-            "--pdf-engine=xelatex",
-            "--variable", "fontsize=6pt",              
-            "-V", "geometry:margin=0.6in"               
+             "--pdf-engine=xelatex",
+            "--template", template_path, 
+            "-V", "geometry:margin=0.4in"                           
         ], check=True)
 
         # Read PDF bytes
