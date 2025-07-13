@@ -3,8 +3,8 @@ pytest
 black
 fastapi
 uvicorn
-python-multipart
-pdfplumber
 openai
 markdown 
-# weasyprint==60.1
+streamlit
+pdfplumber
+python-multipart
