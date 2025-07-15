@@ -7,7 +7,7 @@ def render_pandoc_resume(markdown_text: str) -> bytes:
     with tempfile.TemporaryDirectory() as tmpdir:
         md_path = os.path.join(tmpdir, "resume.md")
         pdf_path = os.path.join(tmpdir, "resume.pdf")
-        template_path = "/workspaces/Smart-Resume-Optimizer/backend/custom_resume_template.tex"
+        template_path = os.path.join(os.path.dirname(__file__), "custom_resume_template.tex")
 
         # Save markdown content
         with open(md_path, "w", encoding="utf-8") as f:
